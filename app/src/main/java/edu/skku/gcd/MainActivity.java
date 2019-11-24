@@ -185,6 +185,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 이미지 불러오기
+    @Override
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case (REQUEST_IMAGE_CAPTURE):
+                    imageFilePath = imageFilePath2;
+                    try {
+                        image = getCorrectOrientedImage(imageFilePath);
+                        makeToastText(imageFilePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        makeToastText(imageFilePath);
+                    }
+                    break;
+
+                case (RESULT_LOAD_IMAGE):
+                    Uri imageUri = data.getData();
+                    imageFilePath = getRealPathFromURI(this, imageUri);
+
+                    try {
+                        image = getCorrectOrientedImage(imageFilePath);
+                        makeToastText(imageFilePath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        makeToastText(imageFilePath);
+                    }
+
+                    break;
+            }
+            imagePreview.setVisibility(View.VISIBLE);
+            imagePreview.setImageBitmap(image);
+            scanImage.setVisibility(View.INVISIBLE);
+            //checkandupload();
+        }
+    }
+
     // 토스트
     public void makeToastText(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -208,4 +246,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
