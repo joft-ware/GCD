@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ask"
+        android:title="문의" />
+    <item
+        android:id="@+id/ver"
+        android:title="버전" />
+    <item
+        android:id="@+id/dev"
+        android:title="개발진" />
+    <item
+        android:id="@+id/quit"
+        android:title="종료" />
+</menu>

@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     final private static int REQUEST_STORAGE_PERMISSION_GRANTED = 4;
 
     private ImageView imagePreview;
-    private TextView uploadTextView, ocrResultText, noResultText;
+    private TextView uploadTextView, ocrResultText, noResultText, resultText;
     private EditText nameTextView;
     private Button regButton, scanImage, resultPage;
     private Bitmap image;
@@ -47,8 +49,52 @@ public class MainActivity extends AppCompatActivity {
     private Button cameraButton, galleryImageButton;
     private String imageFilePath2;
     private String okpath;
-
     private Uri pu;
+
+    //메뉴
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu1, menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.quit:
+                System.exit(0);
+                break;
+
+            case R.id.dev:
+                Intent intent = new Intent(this, PopActivity.class);
+                intent.putExtra("data", "2019-2 성균관대학교 글로벌캡스톤디자인 3조\n류호성 | 이은혜 | 이태주 | 이혜린 | 조재훈\nPlanB");
+                intent.putExtra("title", "개발진");
+                startActivity(intent);
+                break;
+
+            case R.id.ask:
+                Intent intent2 = new Intent(this, PopActivity.class);
+                intent2.putExtra("data", "문의사항이 있으시면\nzxc91911003@gmail.com으로 메일 주세요.\nPlanB");
+                intent2.putExtra("title", "문의사항");
+                startActivity(intent2);
+                break;
+
+            case R.id.ver:
+                Intent intent3 = new Intent(this, PopActivity.class);
+                intent3.putExtra("data", "Ver1.0 \nPlanB");
+                intent3.putExtra("title", "버전");
+                startActivity(intent3);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     //이미지 파일 Path 구하기
     static String getRealPathFromURI(Context context, Uri uri2) {
@@ -119,7 +165,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Intent intent = new Intent(this, LoadingActivity.class);
+        startActivity(intent);
         askPermission();
 
         cameraButton = (Button) findViewById(R.id.cameraButton);
@@ -132,6 +179,8 @@ public class MainActivity extends AppCompatActivity {
         scanImage = (Button) findViewById(R.id.scanImage);
         noResultText = (TextView) findViewById(R.id.noResultText);
         resultPage = (Button) findViewById(R.id.resultPage);
+        resultText = (TextView) findViewById(R.id.uploadImageTextView);
+
 
 
         galleryImageButton.setText("GALLERY");
@@ -205,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
                 case (RESULT_LOAD_IMAGE):
                     Uri imageUri = data.getData();
                     imageFilePath = getRealPathFromURI(this, imageUri);
-
                     try {
                         image = getCorrectOrientedImage(imageFilePath);
                         makeToastText(imageFilePath);
@@ -218,8 +266,22 @@ public class MainActivity extends AppCompatActivity {
             }
             imagePreview.setVisibility(View.VISIBLE);
             imagePreview.setImageBitmap(image);
-            scanImage.setVisibility(View.INVISIBLE);
-            //checkandupload();
+            scanImage.setVisibility(View.VISIBLE);
+            resultText.setVisibility(View.INVISIBLE);
+
+            cameraButton.setVisibility(View.INVISIBLE);
+            galleryImageButton.setVisibility(View.INVISIBLE);
+
+
+
+            final Intent intent4 = new Intent(this, NextActivity.class);
+            scanImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intent4.putExtra("data", imageFilePath);
+                    startActivity(intent4);
+                }
+            });
         }
     }
 
